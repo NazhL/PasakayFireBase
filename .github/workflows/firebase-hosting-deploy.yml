@@ -3,29 +3,28 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main  # Change if your default branch is different
+      - main   # triggers on pushes to main
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    steps:
-      # 1️⃣ Checkout the repo
-      - uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js environment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 3️⃣ Install Firebase CLI
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # 4️⃣ Deploy to Firebase Hosting
       - name: Deploy to Firebase
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" > ${HOME}/firebase-key.json
-          firebase deploy --project pasakay-project-ph --token "$(firebase login:ci --no-localhost)" --non-interactive
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > ${HOME}/firebase-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
+          firebase deploy --project pasakay-project-ph --only hosting
