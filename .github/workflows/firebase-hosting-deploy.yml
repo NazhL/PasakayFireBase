@@ -26,9 +26,9 @@ jobs:
           # Write the service account JSON to a file
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > "${HOME}/firebase-key.json"
 
-          # Tell Firebase CLI to use the JSON key file
+          # Set the environment variable to point to that file
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
 
-          # Deploy only hosting for the specified project
+          # Deploy only hosting for your Firebase project
           firebase deploy --project pasakay-project-ph --only hosting
-          #test
+
