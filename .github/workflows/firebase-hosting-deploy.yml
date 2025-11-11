@@ -22,9 +22,12 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Deploy to Firebase
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > ${HOME}/firebase-key.json
+          # Write the service account JSON to a file
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > "${HOME}/firebase-key.json"
+
+          # Tell Firebase CLI to use the JSON key file
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
+
+          # Deploy only hosting for the specified project
           firebase deploy --project pasakay-project-ph --only hosting
