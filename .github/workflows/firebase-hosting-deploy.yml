@@ -1,37 +1,21 @@
 name: Deploy to Firebase Hosting
 
-# Trigger the workflow on pushes to main
 on:
   push:
     branches:
       - main
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Setup Node.js environment
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      # 3. Install dependencies (npm ci) and build project
-      - name: Install dependencies and build
-        run: |
-          npm ci
-          npm run build
-
-      # 4. Install Firebase CLI
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # 5. Deploy to Firebase Hosting using service account JSON
       - name: Deploy to Firebase Hosting
         run: |
           # Write the service account JSON secret to a file
@@ -40,5 +24,5 @@ jobs:
           # Set environment variable so Firebase CLI uses the JSON file
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
 
-          # Deploy only hosting for your Pasakay project
+          # Deploy only hosting
           firebase deploy --project pasakay-project-ph --only hosting
