@@ -31,5 +31,3 @@ jobs:
     echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > "${HOME}/firebase-key.json"
     export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
     firebase deploy --project pasakay-project-ph --only hosting --non-interactive
-
-#TEST
