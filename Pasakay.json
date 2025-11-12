@@ -1,0 +1,248 @@
+{
+  "README": {
+    "applicationName": "PASAKAY",
+    "description": "A tricycle booking application for Bagong Silangan, Quezon City. Covers 1-2km rides within the community.",
+    "roles": {
+      "passenger": "Books rides, pays (cash/GCash), provides feedback and ratings",
+      "driver": "Accepts bookings, confirms payments, must submit documents for approval before accepting rides",
+      "todaOfficer": "Reviews driver applications and documents, provides verdict (approve/reject) to admin",
+      "admin": "Manages driver accounts based on TODA Officer verdicts, handles final approval/rejection"
+    },
+    "fareStructure": {
+      "specialTrip": "30 pesos base fare for first km",
+      "perKmRate": "5 pesos per additional km"
+    },
+    "driverOnboarding": "Drivers receive pre-created accounts but must submit required documents. TODA Officers review and decide, Admin executes the approval/rejection.",
+    "serviceArea": "Bagong Silangan, Quezon City",
+    "dataStructure": {
+      "users": {
+        "userId": "string - unique identifier",
+        "roleId": "string - reference to roles collection",
+        "driverId": "string or null - reference to drivers collection",
+        "passengerId": "string or null - reference to passengers collection",
+        "firstname": "string",
+        "middleName": "string",
+        "lastName": "string",
+        "email": "string - unique",
+        "birthDate": "string - ISO date format",
+        "sex": "string - M/F",
+        "mobileNumber": "string - unique",
+        "password": "string - hashed",
+        "createdAt": "string - ISO datetime",
+        "isActive": "boolean",
+        "profilePhoto": "string or null - URL",
+        "accountCreatedBy": "string or null - userId of creator (for drivers)",
+        "accountNote": "string or null",
+        "officerPositionId": "string or null - for TODA Officers"
+      },
+      "forgotPassword": {
+        "forgotId": "string - unique identifier",
+        "userId": "string - reference to users",
+        "firebaseToken": "string",
+        "tokenExpiration": "string - ISO datetime",
+        "requestedAt": "string - ISO datetime",
+        "isUsed": "boolean"
+      },
+      "drivers": {
+        "driverId": "string - unique identifier",
+        "userId": "string - reference to users",
+        "licenseNumber": "string or null",
+        "tricycleNumber": "string or null",
+        "franchiseExpiryDate": "string or null - ISO date",
+        "gCashORCode": "string or null",
+        "status": "string - Available/Busy/Offline/Pending Document Submission",
+        "applicationStatus": "string - Document Pending/Under Review/Approved/Rejected",
+        "canAcceptBookings": "boolean",
+        "documentsSubmitted": "boolean",
+        "approvedBy": "string or null - userId",
+        "approvedAt": "string or null - ISO datetime",
+        "rejectedBy": "string or null - userId",
+        "rejectedAt": "string or null - ISO datetime",
+        "rejectionReason": "string or null"
+      },
+      "driverDocuments": {
+        "documentId": "string - unique identifier",
+        "driverId": "string - reference to drivers",
+        "documentType": "string - Driver's License/Tricycle Registration/Franchise Certificate/etc",
+        "documentUrl": "string - storage URL",
+        "uploadedAt": "string - ISO datetime",
+        "reviewedBy": "string or null - officerId",
+        "reviewedAt": "string or null - ISO datetime",
+        "status": "string - Pending/Approved/Rejected",
+        "comments": "string or null"
+      },
+      "driverApplicationReviews": {
+        "reviewId": "string - unique identifier",
+        "driverId": "string - reference to drivers",
+        "reviewedBy": "string - officerId",
+        "verdict": "string - Approved/Rejected",
+        "comments": "string",
+        "reviewedAt": "string - ISO datetime",
+        "submittedToAdmin": "boolean",
+        "submittedToAdminAt": "string or null - ISO datetime"
+      },
+      "adminActions": {
+        "actionId": "string - unique identifier",
+        "adminUserId": "string - reference to users",
+        "driverId": "string - reference to drivers",
+        "actionType": "string - Approve Driver/Reject Driver/Suspend Driver/etc",
+        "basedOnReviewId": "string - reference to driverApplicationReviews",
+        "todaOfficerVerdict": "string - Approved/Rejected",
+        "actionTaken": "string - Approved/Rejected/Suspended",
+        "actionDate": "string - ISO datetime",
+        "notes": "string or null"
+      },
+      "passengers": {
+        "passengerId": "string - unique identifier",
+        "userId": "string - reference to users",
+        "defaultPickupLocation": "string or null",
+        "savedLocations": "array of strings"
+      },
+      "booking": {
+        "bookingId": "string - unique identifier",
+        "passengerId": "string - reference to passengers",
+        "driverId": "string or null - reference to drivers",
+        "fareId": "string - reference to fareMatrix",
+        "pickupLocation": "string",
+        "dropoffLocation": "string",
+        "distanceKm": "number - decimal",
+        "estimatedFare": "number - decimal",
+        "actualFare": "number or null - decimal",
+        "status": "string - Pending/Accepted/In Progress/Completed/Cancelled",
+        "requestedAt": "string - ISO datetime",
+        "acceptedAt": "string or null - ISO datetime",
+        "pickedUpAt": "string or null - ISO datetime",
+        "completedAt": "string or null - ISO datetime",
+        "cancelledAt": "string or null - ISO datetime",
+        "cancellationReason": "string or null"
+      },
+      "bookingChat": {
+        "chatId": "string - unique identifier",
+        "bookingId": "string - reference to booking",
+        "senderId": "string - userId",
+        "senderType": "string - Passenger/Driver",
+        "message": "string",
+        "timestamp": "string - ISO datetime"
+      },
+      "feedback": {
+        "feedbackId": "string - unique identifier",
+        "bookingId": "string - reference to booking",
+        "passengerId": "string - reference to passengers",
+        "driverId": "string - reference to drivers",
+        "rating": "number - integer 1-5",
+        "comments": "string or null",
+        "createdAt": "string - ISO datetime"
+      },
+      "payment": {
+        "paymentId": "string - unique identifier",
+        "bookingId": "string - reference to booking",
+        "passengerId": "string - reference to passengers",
+        "driverId": "string - reference to drivers",
+        "paymentMethodId": "string - reference to paymentMethods",
+        "amount": "number - decimal",
+        "status": "string - Pending/Confirmed/Failed",
+        "paidAt": "string - ISO datetime",
+        "confirmedByDriver": "boolean",
+        "confirmedAt": "string or null - ISO datetime"
+      },
+      "earnings": {
+        "earningId": "string - unique identifier",
+        "driverId": "string - reference to drivers",
+        "bookingId": "string - reference to booking",
+        "amount": "number - decimal",
+        "paymentMethod": "string - Cash/GCash",
+        "dateEarned": "string - ISO datetime",
+        "status": "string - Completed (only created when booking is completed)"
+      },
+      "auditLogs": {
+        "auditLogId": "string - unique identifier",
+        "entityType": "string - Driver/Booking/Payment/User/etc",
+        "entityId": "string - reference to relevant entity",
+        "action": "string - description of action",
+        "performedBy": "string - userId",
+        "performedByRole": "string - Passenger/Driver/TODA Officer/Admin",
+        "timestamp": "string - ISO datetime",
+        "details": "string or null"
+      }
+    }
+  },
+  "roles": {
+    "role_1": {
+      "roleId": "role_1",
+      "roleName": "Passenger",
+      "description": "Books rides and provides feedback"
+    },
+    "role_2": {
+      "roleId": "role_2",
+      "roleName": "Driver",
+      "description": "Accepts bookings and fulfills rides"
+    },
+    "role_3": {
+      "roleId": "role_3",
+      "roleName": "TODA Officer",
+      "description": "Reviews driver applications and documents"
+    },
+    "role_4": {
+      "roleId": "role_4",
+      "roleName": "Admin",
+      "description": "Manages driver accounts and system"
+    }
+  },
+  "users": {},
+  "forgotPassword": {},
+  "officerRoles": {
+    "officer_role_1": {
+      "rolePositionId": "officer_role_1",
+      "positionName": "President"
+    },
+    "officer_role_2": {
+      "rolePositionId": "officer_role_2",
+      "positionName": "Vice President"
+    },
+    "officer_role_3": {
+      "rolePositionId": "officer_role_3",
+      "positionName": "Secretary"
+    },
+    "officer_role_4": {
+      "rolePositionId": "officer_role_4",
+      "positionName": "Treasurer"
+    }
+  },
+  "todaOfficers": {},
+  "drivers": {},
+  "driverDocuments": {},
+  "driverApplicationReviews": {},
+  "adminActions": {},
+  "passengers": {},
+  "fareMatrix": {
+    "fare_001": {
+      "fareId": "fare_001",
+      "fareType": "Special Trip",
+      "baseFare": 30.0,
+      "baseFareDistance": 1.0,
+      "pricePerKm": 5.0,
+      "effectiveDate": "2025-01-01",
+      "serviceArea": "Bagong Silangan, Quezon City",
+      "maxDistance": 2.0,
+      "isActive": true
+    }
+  },
+  "booking": {},
+  "bookingChat": {},
+  "feedback": {},
+  "payment": {},
+  "paymentMethods": {
+    "method_001": {
+      "paymentMethodId": "method_001",
+      "methodName": "Cash",
+      "isActive": true
+    },
+    "method_002": {
+      "paymentMethodId": "method_002",
+      "methodName": "GCash",
+      "isActive": true
+    }
+  },
+  "earnings": {},
+  "auditLogs": {}
+}
